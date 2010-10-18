@@ -1,0 +1,60 @@
+#!/usr/bin/perl -w
+use strict;
+use warnings;
+
+# Generalised binary search.
+# NOT taint-safe
+
+my ($practical_lowest, $practical_highest, $command, @args) = @ARGV;
+unless(
+  $command and
+  $practical_lowest=~/^\d+$/ and
+  $practical_highest=~/^\d+$/
+) {
+  print <<EOF;
+$0 <practical lowest value> <practical highest value> <command> [<arg> <arg> ...]
+
+Performs a binary search by using a human (you) to report whether
+a given result suggests that a (h)igher or (l)ower offset is needed
+to find the target value. The work of retrieving values to test is
+done by <command>. <practical lowest value> <practical highest
+value> must the the most extreme values which make sense to <command>.
+
+<command> - a command which can be run to extract a value and output
+it as a single line. The command MAY produce extra data afterwards,
+which will be dropped. The first line of output WILL be skipped.
+<arg> - An argument to the command above. These will be passed
+verbatim apart from the special argument '{}' which will be replaced
+with the current test offset. If there are no arguments containing
+'{}', one will be added at the end.
+
+Example:
+$0 0 \`stat -f '\%z' some.file\` tail -c {} some.file
+EOF
+  exit 1;
+}
+
+my $low = $practical_lowest-1;
+my $high = $practical_highest+1;
+my $test;
+do {
+  $test = int(($low+$high)/2);
+  print "Testing $test:\n";
+  my @command_parts = ($command, map {s/\{\}/$test/g;$_} @args);
+  open(my $result_h, "-|", @command_parts);
+  scalar <$result_h>; # Skip a line
+  print scalar <$result_h>;
+  close($result_h);
+  print "Should I test a (h)igher or (l)ower value, or is this (c)lose enough? ";
+  chomp(my $hlc=<STDIN>);
+  if($hlc eq "h") {
+    $low=$test;
+  } elsif($hlc eq "l") {
+    $high=$test;
+  } elsif($hlc eq "c") {
+    print "Last command was: ".join(" ", @command_parts)."\n";
+    exit;
+  } else {
+    die "I have no idea what you're trying to say. Goodbye.\n";
+  }
+} while($low < $high);

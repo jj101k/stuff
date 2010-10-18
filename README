@@ -12,6 +12,7 @@ bin/pushto      - Use for maintaining multiple working directories, eg. code,
                   dev (alpha test), test. This helps greatly with separating
                   debugging efforts, and helps avoid embarrassing "it was in my
                   working dir" problems.
+binary-search/  - Binary-search-related utilities
 
 Licence
 =======
