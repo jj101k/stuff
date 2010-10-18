@@ -1,0 +1,11 @@
+#!/bin/sh
+# Just prints the (full) directory which is the current git repository root
+
+while ! [ -d .git ]; do
+  if [ `pwd` == "/" ]; then
+    echo "Not in a git repository" >&2
+    exit 1
+  fi
+  cd ..
+done
+pwd

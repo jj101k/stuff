@@ -1,0 +1,6 @@
+#!/bin/sh
+# Tries to discover which branch you're on. Only covers common cases.
+# I know there are better ways to do this, but I can't recall them at the
+# moment.
+
+git branch | awk '$1=="*" {print $2}'

@@ -1,4 +1,9 @@
+Files
+=====
 
+Makefile.copyme - a makefile template to act as a "git pull" wrapper, such that
+                  "make" is equivalent to "git pull && make".
+bin/ - directory full of utilities which are useful for my workflow
 
 Licence
 =======

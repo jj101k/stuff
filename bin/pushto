@@ -1,0 +1,23 @@
+#!/bin/sh
+relative_path=$1
+if [ "$relative_path" == "" ]; then
+  echo "$0 <relative path>"
+  echo
+  echo "Pulls the current HEAD to a git repository in another directory,"
+  echo "which is assumed to have the same name, eg:"
+  echo
+  echo "$0 ../testing"
+  echo
+  echo "...from the directory 'foo' would refer to ../../testing/foo"
+  exit 1
+fi
+
+git_dir=`current-git-dir`
+git_branch=`current-git-branch`
+target_dir=$git_dir/../$relative_path/`basename $git_dir`
+(
+  cd $target_dir && git merge $git_dir $git_branch:HEAD || (
+    echo "Sorry, that didn't work. I'll give you a shell to fix it or whatever"
+    $SHELL -i
+  )
+)
