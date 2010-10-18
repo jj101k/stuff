@@ -3,7 +3,15 @@ Files
 
 Makefile.copyme - a makefile template to act as a "git pull" wrapper, such that
                   "make" is equivalent to "git pull && make".
-bin/ - directory full of utilities which are useful for my workflow
+bin/            - directory full of utilities which are useful for my workflow
+bin/current-git-dir
+                - Prints the full path to the current top of the repository
+bin/current-git-branch
+                - Quick and dirty current-branch printer
+bin/pushto      - Use for maintaining multiple working directories, eg. code,
+                  dev (alpha test), test. This helps greatly with separating
+                  debugging efforts, and helps avoid embarrassing "it was in my
+                  working dir" problems.
 
 Licence
 =======
