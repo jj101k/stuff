@@ -1,0 +1,21 @@
+# This is a quick makefile wrapper so that you can do "make" to do a pull
+# followed by local tweaks. It's intended for "running on git" repositories, eg.
+# sets of scripts to run in-place.
+#
+# It's so damn short, it might as well be public domain. There you are, public.
+# Take it. It's good.
+#
+# Jim Driscoll (original author)
+#
+.PHONY: all pull no-pull
+
+all:
+
+pull:
+  git pull
+
+no-pull:
+  make -f Makefile.inner all
+
+%:
+  make -f Makefile.inner $@
