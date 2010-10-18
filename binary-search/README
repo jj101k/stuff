@@ -17,10 +17,10 @@ not the best approach for huge log files.
 Typically this requires either fixed-length records or variable-length
 records with a totally unambiguous end-of-record (or start-of-record).
 If you have variable-length records with an ambiguous EOR, as is
-usually the case with compressed data****, then the data set is
+usually the case with compressed data***, then the data set is
 effectively not seekable and binary search would not be possible.
 
-Upper and lower bounds must always be outside the actual range***
+Upper and lower bounds must always be outside the actual range****
 to ensure that the first and last values are valid results.
 
 It is entirely possible to have a record which is "on the line" but
@@ -49,5 +49,7 @@ small.
 ** - for variable-length records, you have to treat them as being
 byte-based, have a well-defined system for finding a start-of-record,
 and carefully handle overlap.
-*** - In terms of start-of-record. If the upper bound you've already got is not a start-of-record then it can stay as it is.
-*** - I gather that gzip in "rsyncable" mode has fixed output block sizes and so might be suitable for binary search.
+*** - I gather that gzip in "rsyncable" mode has fixed output block
+sizes and so might be suitable for binary search.
+**** - In terms of start-of-record. If the upper bound you've already
+got is not a start-of-record then it can stay as it is.
