@@ -16,7 +16,7 @@ git_dir=`current-git-dir`
 git_branch=`current-git-branch`
 target_dir=$git_dir/../$relative_path/`basename $git_dir`
 (
-  cd $target_dir && git merge $git_dir $git_branch:HEAD || (
+  cd $target_dir && git pull $git_dir $git_branch || (
     echo "Sorry, that didn't work. I'll give you a shell to fix it or whatever"
     $SHELL -i
   )
