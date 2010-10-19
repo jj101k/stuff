@@ -1,7 +1,7 @@
 #!/bin/sh
 relative_path=$1
 if [ "$relative_path" == "" ]; then
-  echo "$0 <relative path>"
+  echo "$0 <relative path> [--make]"
   echo
   echo "Pulls the current HEAD to a git repository in another directory,"
   echo "which is assumed to have the same name, eg:"
@@ -9,14 +9,20 @@ if [ "$relative_path" == "" ]; then
   echo "$0 ../testing"
   echo
   echo "...from the directory 'foo' would refer to ../../testing/foo"
+  echo "If you add --make, it will also run 'make no-pull' for you."
   exit 1
+fi
+if [ "$2" == "--make" ]; then
+  tail_command="make no-pull"
+else
+  tail_command="true"
 fi
 
 git_dir=`current-git-dir`
 git_branch=`current-git-branch`
 target_dir=$git_dir/../$relative_path/`basename $git_dir`
 (
-  cd $target_dir && git pull $git_dir $git_branch || (
+  cd $target_dir && git pull $git_dir $git_branch && $tail_command || (
     echo "Sorry, that didn't work. I'll give you a shell to fix it or whatever"
     $SHELL -i
   )
