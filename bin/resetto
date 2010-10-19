@@ -1,0 +1,16 @@
+#!/bin/sh
+relative_path=$1
+if [ "$relative_path" == "" ]; then
+  echo "$0 <relative path>"
+  echo
+  echo "Resets another repository's working directory (just 'git reset --hard')"
+  exit 1
+fi
+
+target_dir=$git_dir/../$relative_path/`basename $git_dir`
+(
+  cd $target_dir && git reset --hard || (
+    echo "Sorry, that didn't work. I'll give you a shell to fix it or whatever"
+    $SHELL -i
+  )
+)
