@@ -7,6 +7,7 @@ if [ "$relative_path" == "" ]; then
   exit 1
 fi
 
+git_dir=`current-git-dir`
 target_dir=$git_dir/../$relative_path/`basename $git_dir`
 (
   cd $target_dir && git reset --hard || (
