@@ -24,6 +24,6 @@ target_dir=$git_dir/../$relative_path/`basename $git_dir`
 (
   cd $target_dir && git pull $git_dir $git_branch && $tail_command || (
     echo "Sorry, that didn't work. I'll give you a shell to fix it or whatever"
-    $SHELL -i
+    PS1="$ " $SHELL -i
   )
 )
