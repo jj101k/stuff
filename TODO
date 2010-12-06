@@ -1,1 +1,0 @@
-Make --make take an argument for the intended make rule (and probably default it to "all")
