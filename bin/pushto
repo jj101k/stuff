@@ -22,7 +22,6 @@ if [[ "$2" == --make* ]]; then
 else
   tail_command="true"
 fi
-echo $tail_command
 
 git_dir=`current-git-dir`
 git_branch=`current-git-branch`
