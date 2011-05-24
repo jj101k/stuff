@@ -17,7 +17,16 @@ If you specify --make=<foo> then 'make <foo>' will be run instead
 EOF
   exit(1);
 }
-my $tail_command;
+
+use Getopt::Long;
+my $make_command;
+
+my $result = GetOptions(
+  "make=s" => \$make_command,
+);
+
+my $tail_command = $make_command? "make $make_command" : "true";
+
 if($ARGV[1]=~/^--make(?:=(.*))?/ ) {
   my $make_command=$1;
   $tail_command="make $make_command";
