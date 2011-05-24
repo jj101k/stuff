@@ -1,4 +1,4 @@
-#!/bin/env perl
+#!/usr/bin/env perl
 use strict;
 use warnings;
 my $relative_path=$ARGV[0];
