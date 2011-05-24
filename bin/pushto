@@ -27,13 +27,6 @@ my $result = GetOptions(
 
 my $tail_command = $make_command? "make $make_command" : "true";
 
-if($ARGV[1]=~/^--make(?:=(.*))?/ ) {
-  my $make_command=$1;
-  $tail_command="make $make_command";
-} else {
-  $tail_command="true";
-}
-
 my $git_dir=`current-git-dir`;
 my $git_branch=`current-git-branch`;
 my $target_dir="$git_dir/../$relative_path/".`basename $git_dir`;
