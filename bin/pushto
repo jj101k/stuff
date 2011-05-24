@@ -4,7 +4,7 @@ use warnings;
 my $relative_path=$ARGV[0];
 unless($relative_path) {
   print <<EOF;
-$0 <relative path> [--make[=<foo>]]
+$0 <relative path> [--make[=<foo>]] [--confirm]
 
 Pulls the current HEAD to a git repository in another directory,
 which is assumed to have the same name, eg:
@@ -14,18 +14,32 @@ $0 ../testing
 ...from the directory 'foo' would refer to ../../testing/foo
 If you add --make, it will also run 'make' for you.
 If you specify --make=<foo> then 'make <foo>' will be run instead
+
+Setting --confirm will just ask for confirmation before continuing.
+This can be useful in scripts or quick history replays where the
+results might be destructive.
 EOF
   exit(1);
 }
 
 use Getopt::Long;
 my $make_command;
+my $confirm;
 
 my $result = GetOptions(
   "make=s" => \$make_command,
+  "confirm" => \$confirm,
 );
 
 my $tail_command = $make_command? "make $make_command" : "true";
+
+if($confirm) {
+  print "About to push to $relative_path. Continue [Yn] ";
+  chomp(my $yn = <STDIN>);
+  if($yn eq "n") {
+    exit 2;
+  }
+}
 
 my $git_dir=`current-git-dir`;
 my $git_branch=`current-git-branch`;
