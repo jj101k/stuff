@@ -1,39 +1,41 @@
-#!/bin/sh
-relative_path=$1
-if [ "$relative_path" == "" ]; then
-  echo "$0 <relative path> [--make[=<foo>]]"
-  echo
-  echo "Pulls the current HEAD to a git repository in another directory,"
-  echo "which is assumed to have the same name, eg:"
-  echo
-  echo "$0 ../testing"
-  echo
-  echo "...from the directory 'foo' would refer to ../../testing/foo"
-  echo "If you add --make, it will also run 'make' for you."
-	echo "If you specify --make=<foo> then 'make <foo>' will be run instead"
-  exit 1
-fi
-if [[ "$2" == --make* ]]; then
-	make_command=""
-	if [[ "$2" == --make=* ]]; then
-		make_command=${2##--make=}
-	fi
-  tail_command="make $make_command"
-else
-  tail_command="true"
-fi
+#!/bin/env perl
+use strict;
+use warnings;
+my $relative_path=$ARGV[0];
+unless($relative_path) {
+  print <<EOF;
+$0 <relative path> [--make[=<foo>]]
 
-git_dir=`current-git-dir`
-git_branch=`current-git-branch`
-target_dir=$git_dir/../$relative_path/`basename $git_dir`
-(
-  cd $target_dir && git pull $git_dir $git_branch && $tail_command || (
-    echo "Sorry, that didn't work. I'll give you a shell to fix it or whatever"
-    PS1="$ " $SHELL -i
-    echo; echo "Want me to try again? [Yn] "
-    read yn
-    if [ "$yn" != "n" ]; then
-      git pull $git_dir $git_branch && $tail_command
-    fi
-  )
-)
+Pulls the current HEAD to a git repository in another directory,
+which is assumed to have the same name, eg:
+
+$0 ../testing
+
+...from the directory 'foo' would refer to ../../testing/foo
+If you add --make, it will also run 'make' for you.
+If you specify --make=<foo> then 'make <foo>' will be run instead
+EOF
+  exit(1);
+}
+my $tail_command;
+if($ARGV[1]=~/^--make(?:=(.*))?/ ) {
+  my $make_command=$1;
+  $tail_command="make $make_command";
+} else {
+  $tail_command="true";
+}
+
+my $git_dir=`current-git-dir`;
+my $git_branch=`current-git-branch`;
+my $target_dir="$git_dir/../$relative_path/".`basename $git_dir`;
+chdir($target_dir) or die "$target_dir: $!";
+unless(system("git pull $git_dir $git_branch && $tail_command") == 0) {
+  print "Sorry, that didn't work. I'll give you a shell to fix it or whatever\n";
+  $ENV{PS1} = '$ ';
+  system($ENV{SHELL}, "-i");
+  print "\nWant me to try again? [Yn] ";
+  chomp(my $yn = <STDIN>);
+  if($yn ne "n") {
+    system("git pull $git_dir $git_branch && $tail_command");
+  }
+}
