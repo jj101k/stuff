@@ -1,1 +1,2 @@
 Merge-old-patches helper
+Make sure that current-git-dir exists
