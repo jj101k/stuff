@@ -50,10 +50,10 @@ my @wd_stat = stat($git_dir);
 my @td_stat = stat($target_dir);
 
 if($wd_stat[0] == $td_stat[0] and $wd_stat[1] == $td_stat[1]) {
-  die "$relative_path: is the same as the working directory $git_dir";
+  die "$relative_path: is the same as the working directory $git_dir\n";
 }
 
-chdir($target_dir) or die "$target_dir: $!";
+chdir($target_dir) or die "$target_dir: $!\n";
 unless(system("git pull $git_dir $git_branch && $tail_command") == 0) {
   print "Sorry, that didn't work. I'll give you a shell to fix it or whatever\n";
   $ENV{PS1} = '$ ';
