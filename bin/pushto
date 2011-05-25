@@ -41,9 +41,9 @@ if($confirm) {
   }
 }
 
-my $git_dir=`current-git-dir`;
-my $git_branch=`current-git-branch`;
-my $target_dir="$git_dir/../$relative_path/".`basename $git_dir`;
+chomp(my $git_dir=`current-git-dir`);
+chomp(my $git_branch=`current-git-branch`);
+chomp(my $target_dir="$git_dir/../$relative_path/".`basename $git_dir`);
 
 # 0, 1 = device, inode = effective uid
 my @wd_stat = stat($git_dir);
