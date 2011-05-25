@@ -33,17 +33,17 @@ my $result = GetOptions(
 
 my $tail_command = $make_command? "make $make_command" : "true";
 
+chomp(my $git_dir=`current-git-dir`);
+chomp(my $git_branch=`current-git-branch`);
+chomp(my $target_dir="$git_dir/../$relative_path/".`basename $git_dir`);
+
 if($confirm) {
-  print "About to push to $relative_path. Continue [Yn] ";
+  print "About to push to $relative_path from $git_dir branch $git_branch. Continue [Yn] ";
   chomp(my $yn = <STDIN>);
   if($yn eq "n") {
     exit 2;
   }
 }
-
-chomp(my $git_dir=`current-git-dir`);
-chomp(my $git_branch=`current-git-branch`);
-chomp(my $target_dir="$git_dir/../$relative_path/".`basename $git_dir`);
 
 # 0, 1 = device, inode = effective uid
 my @wd_stat = stat($git_dir);
