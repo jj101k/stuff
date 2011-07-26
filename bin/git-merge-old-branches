@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+patch_b = ARGV[0]
+master_prefix = ARGV[1]
+new_prefix = ARGV[2]
+true_master = ARGV[3] || new_prefix
+
+IO.popen("git branch") do
+  |io|
+  candidates = io.lines.find_all do
+    |l|
+    l.match(/^ *#{master_prefix}/)
+  end.collect do
+    |l|
+    l.sub(/^ */, "").chomp
+  end
+end
+candidates.each do
+  |b|
+  new = can.sub(/^#{master_prefix}/, new_prefix)
+  print "Make #{new} <- #{can}? [Yn] "
+  yn = STDIN.gets.chomp
+  if(yn == "n") then
+    next
+  else
+    system("git", "checkout", "-b", new, true_master);
+    merged = system("git", "merge", can);
+    if(merged) then
+      puts "Merged"
+    else
+      system("/bin/bash", "-i")
+      print "Abort? [Yn] "
+      yn = STDIN.gets.chomp
+      if(yn != "n") then
+        system("git", "reset", "--hard")
+        system("git", "checkout", patch_b)
+        system("git", "branch", "-d", new)
+        next
+      end
+    end
+    system("git", "checkout", patch_b)
+    merged = system("git", "merge", new)
+    if(merged) then
+      puts "Merged"
+    else
+      system("/bin/bash", "-i")
+      print "Abort? [Yn] "
+      yn = STDIN.gets.chomp
+      if(yn != "n") then
+        system("git", "reset", "--hard")
+        next
+      end
+    end
+    system("git", "branch", "-d", can)
+  end
+end
