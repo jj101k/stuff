@@ -7,4 +7,4 @@ if [ "$to" == "" ]; then
 	echo "This will copy the file then open both for editing (in vi) then try to commit both"
 	exit 1
 fi
-cp $from $to && vi $from $to && git add $from $to && git commit $from $to
+cp "$from" "$to" && vi "$from" "$to" && git add "$from" "$to" && git commit "$from" "$to"
