@@ -1,5 +1,4 @@
-Files
-=====
+# Files
 
 Makefile.copyme - a makefile template to act as a "git pull" wrapper, such that
                   "make" is equivalent to "git pull && make".
@@ -19,7 +18,6 @@ bin/split-file  - Copies a file, opens both for editing, tries to commit both.
 									This is intended for when you're splitting code out of a file.
 binary-search/  - Binary-search-related utilities
 
-Licence
-=======
+# Licence
 
 Except where otherwise specified, all code within this directory and any subdirectories have copyright and licencing as described in the file COPYING.
