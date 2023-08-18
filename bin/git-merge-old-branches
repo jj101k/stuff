@@ -5,9 +5,10 @@ master_prefix = ARGV[1]
 new_prefix = ARGV[2]
 true_master = ARGV[3] || new_prefix
 
+candidates = []
 IO.popen("git branch") do
   |io|
-  candidates = io.lines.find_all do
+  candidates = io.each_line.find_all do
     |l|
     l.match(/^ *#{master_prefix}/)
   end.collect do
@@ -16,7 +17,7 @@ IO.popen("git branch") do
   end
 end
 candidates.each do
-  |b|
+  |can|
   new = can.sub(/^#{master_prefix}/, new_prefix)
   print "Make #{new} <- #{can}? [Yn] "
   yn = STDIN.gets.chomp
